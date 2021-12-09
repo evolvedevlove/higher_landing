@@ -20,7 +20,7 @@ browser = wd.Chrome(service=chromedriver_service)
 
 ''' get secret test information from a json file '''
 base_path = r"H:\2021-11-03-HIGHER-LANDING\\"
-test_info_file_name = 'test_info.json'
+test_info_file_name = 'secret_test_info.json'
 with open(base_path + './' + test_info_file_name, 'r') as t_f:
     json_string = t_f.read()
 test_info_dict = json.loads(json_string)
