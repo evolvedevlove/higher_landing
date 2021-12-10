@@ -2,7 +2,7 @@
 """
 Created on Thu Nov 18 09:00:10 2021
 Outputs a list of events that a student must attend
-@author: Patty Whack
+@author: Patty Whack video here - https://www.youtube.com/watch?v=hKT7jWbkxmc
 """
 from selenium import webdriver as wd
 from selenium.webdriver.chrome.service import Service
@@ -25,9 +25,10 @@ with open(base_path + './' + test_info_file_name, 'r') as t_f:
     json_string = t_f.read()
 test_info_dict = json.loads(json_string)
 
+''' open the browser to the events page of the course '''
 url = test_info_dict.get('events_url')
 browser.get(url)
-
+browser.set_window_rect(x=930, y=0, width=1200, height=1125)
 ''' wait until we can click on the log in button'''
 waiter = WebDriverWait(browser, 10)
 ready_for_input = waiter.until(EC.element_to_be_clickable((
