@@ -2,7 +2,7 @@
 """
 Created on Thu Nov 18 09:00:10 2021
 Outputs a list of events that a student must attend
-@author: PattyWhack video here - https://www.youtube.com/watch?v=hKT7jWbkxmc
+@author: Patty Whack - video here - https://www.youtube.com/watch?v=hKT7jWbkxmc
 """
 from selenium import webdriver as wd
 from selenium.webdriver.chrome.service import Service
