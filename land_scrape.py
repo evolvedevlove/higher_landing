@@ -76,16 +76,28 @@ for link in event_title_links:
             By.ID, test_info_dict.get('locators').get('event_rsvp_button'))))
         ''' parse the current page and search for the zoom link '''
         tmp_event_soup = BeautifulSoup(browser.page_source, 'html.parser')
+
         zoom_link = tmp_event_soup.find('p', text=re.compile('^https:.*zoom'))
-        description_container_element = zoom_link.parent  # this will make our next searches faster
+        # get the parent/containing element
+        if zoom_link is not None:
+            description_container_element = zoom_link.parent
+            zoom_link_text = zoom_link.text
+        else:
+            # in which case there is a \xa0 that is stopping our first attempt
+            description_container_element = tmp_event_soup.find(class_='column wpc65 left')
+            zoom_link_text = description_container_element.text.split('via Zoom:')[1]
+
+        ''' this is not perfect currently pulling out too many spaces '''
+        description_text = description_container_element.text.split('Send calendar to email')[1].replace(u'\n', ' ')
+
         ''' collect the start time, date, and full event description '''
         event_start_datetime_locator = test_info_dict.get('locators').get('event_start_datetime')
         event_start_datetime = description_container_element.find(id=event_start_datetime_locator)
         event_start_datetime_formatted = event_start_datetime.text.replace('/', '-')
         # todo: attending_span = description_container_element.find(id='description_container_element')
-        description_text = description_container_element.get_text().split("Send calendar to email")[1].strip('\n')
         ''' create a tuple to add to the events to attend list '''
-        tmp_tuple = (link.text, event_start_datetime_formatted, zoom_link.text, description_text)
+        tmp_tuple = (link.text, event_start_datetime_formatted, zoom_link_text, description_text.replace(u'\xa0', ' '))
+        print(str(tmp_tuple))
         events_to_attend_list.append(tmp_tuple)
         ''' navigate back to previous page '''
         back_to_calendar_link = browser.find_element(By.ID, test_info_dict.get('locators').get('back_calendar_link'))
@@ -98,4 +110,4 @@ for link in event_title_links:
         print("skipped {}".format(link.text))
 ''' use the events to attend list to create a pandas dataframe '''
 events_to_attend_df = pd.DataFrame(events_to_attend_list, columns=["Title", "Start Time", "Link", "Description"])
-events_to_attend_df.to_csv("{}Required_Events.csv".format(base_path))
+events_to_attend_df.to_csv("{}-Required_Events.csv".format(base_path))
