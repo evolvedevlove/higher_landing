@@ -2,7 +2,14 @@
 """
 Created on Thu Nov 18 09:00:10 2021
 
-@author: Patty Whack
+Purpose: grabbing events information from a website using selenium and BeautifulSoup
+Usage: run this script to get a csv file of all the events you must attend as a student
+
+@author: Patty Whack -
+feedback request video here - https://youtu.be/e7rZ24X8osA
+video overview here - https://www.youtube.com/watch?v=hKT7jWbkxmc
+blog post here  - https://www.linkedin.com/pulse/i-made-web-bot-instead-doing-my-homework-patrick-crosman
+
 """
 from selenium import webdriver as wd
 from selenium.webdriver.chrome.service import Service
@@ -106,7 +113,7 @@ def get_event_details(browser, link, test_info_dictionary):
     zoom_link = tmp_event_soup.find('p', text=re.compile('^https:.*zoom'))
     if zoom_link is not None:
         description_container_element = zoom_link.parent
-        zoom_link_text = zoom_link.text
+        zoom_link_text = zoom_link.text.replace(u'\xa0', '')
     else:
         # in which case our first attempt fails
         description_container_element = tmp_event_soup.find(class_='column wpc65 left')
@@ -117,7 +124,9 @@ def get_event_details(browser, link, test_info_dictionary):
 
     ''' create our tuple to return containing the event details '''
     tmp_tuple = (link.text, event_start_datetime.text.replace('/', '-'),
-                 zoom_link_text, description_text.replace(u'\xa0', ' '))
+                 zoom_link_text.split("Meeting ID: ")[0], browser.current_url,
+                 description_text.replace(u'\xa0', ' ').strip('    '))
+    print(tmp_tuple)
     return tmp_tuple
 
 
@@ -133,8 +142,9 @@ def return_to_upcoming_events(browser, test_info_dictionary):
 
 
 def main():
+    """ running this script will create a csv file of the events you must attend """
     local_base_path = r"H:\2021-11-03-HIGHER-LANDING"
-    test_info_dict = get_test_info(local_base_path, 'test_info.json')
+    test_info_dict = get_test_info(local_base_path, 'secret_test_info.json')
 
     # this will take us to the log in page
     browser = launch_browser(test_info_dict)
@@ -146,8 +156,8 @@ def main():
 
     # the list that will be used to create our dataframe
     events_to_attend_list = []
-
     for event_title_link in event_title_links:
+        #print(event_title_link.text)
         if event_title_link.text in required_sessions_string:
             event_details = get_event_details(browser, event_title_link, test_info_dict)
             events_to_attend_list.append(event_details)
@@ -156,8 +166,11 @@ def main():
             print("skipped {}".format(event_title_link.text))
 
     ''' use the events to attend list to create a pandas dataframe '''
-    events_to_attend_df = pd.DataFrame(events_to_attend_list, columns=["Title", "Start Time", "Link", "Description"])
-    events_to_attend_df.to_csv('Required_Events_modules.csv')
+    events_to_attend_df = pd.DataFrame(events_to_attend_list, columns=["Title", "Start Time", "Zoom Link",
+                                                                       "HL Link", "Description"])
+    csv_output_file_path = 'All_Events-1843-12202021.csv'
+    print(csv_output_file_path)
+    events_to_attend_df.to_csv(csv_output_file_path)
 
 
 if __name__ == '__main__':
