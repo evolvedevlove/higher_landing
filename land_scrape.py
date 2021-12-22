@@ -3,6 +3,8 @@
 Created on Thu Nov 18 09:00:10 2021
 Outputs a list of events that a student must attend
 @author: Patty Whack - video here - https://www.youtube.com/watch?v=hKT7jWbkxmc
+blog post here
+https://www.linkedin.com/pulse/i-made-web-bot-instead-doing-my-homework-patrick-crosman
 """
 from selenium import webdriver as wd
 from selenium.webdriver.chrome.service import Service
@@ -83,7 +85,7 @@ for link in event_title_links:
             description_container_element = zoom_link.parent
             zoom_link_text = zoom_link.text
         else:
-            # in which case there is a \xa0 that is stopping our first attempt
+            # in which case our first attempt fails
             description_container_element = tmp_event_soup.find(class_='column wpc65 left')
             zoom_link_text = description_container_element.text.split('via Zoom:')[1]
 
@@ -110,4 +112,5 @@ for link in event_title_links:
         print("skipped {}".format(link.text))
 ''' use the events to attend list to create a pandas dataframe '''
 events_to_attend_df = pd.DataFrame(events_to_attend_list, columns=["Title", "Start Time", "Link", "Description"])
-events_to_attend_df.to_csv("{}-Required_Events.csv".format(base_path))
+events_to_attend_csv_path = "{}-Required_Events.csv".format(base_path)
+events_to_attend_df.to_csv(events_to_attend_csv_path)
