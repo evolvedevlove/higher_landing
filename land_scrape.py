@@ -2,9 +2,10 @@
 """
 Created on Thu Nov 18 09:00:10 2021
 Outputs a list of events that a student must attend
-@author: Patty Whack - video here - https://www.youtube.com/watch?v=hKT7jWbkxmc
-blog post here
-https://www.linkedin.com/pulse/i-made-web-bot-instead-doing-my-homework-patrick-crosman
+@author: Patty Whack -
+feedback request video here - https://youtu.be/e7rZ24X8osA
+video overview here - https://www.youtube.com/watch?v=hKT7jWbkxmc
+blog post here  - https://www.linkedin.com/pulse/i-made-web-bot-instead-doing-my-homework-patrick-crosman
 """
 from selenium import webdriver as wd
 from selenium.webdriver.chrome.service import Service
