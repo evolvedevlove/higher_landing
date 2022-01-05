@@ -152,7 +152,8 @@ def main():
     # log in using credentials
     login(browser, test_info_dict)
     event_title_links = list_events(browser, test_info_dict)
-    required_sessions_string = get_required_events(test_info_dict)
+    #required_sessions_string = get_required_events(test_info_dict)
+    required_sessions_string = str(event_title_links)
 
     # the list that will be used to create our dataframe
     events_to_attend_list = []
@@ -168,7 +169,7 @@ def main():
     ''' use the events to attend list to create a pandas dataframe '''
     events_to_attend_df = pd.DataFrame(events_to_attend_list, columns=["Title", "Start Time", "Zoom Link",
                                                                        "HL Link", "Description"])
-    csv_output_file_path = 'All_Events-1843-12202021.csv'
+    csv_output_file_path = 'All_Events-0948-2022-01-04.csv'
     print(csv_output_file_path)
     events_to_attend_df.to_csv(csv_output_file_path)
 
