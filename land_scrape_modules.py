@@ -17,6 +17,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+from datetime import datetime as dt
 import re
 import json
 import pandas as pd
@@ -169,7 +170,7 @@ def main():
     ''' use the events to attend list to create a pandas dataframe '''
     events_to_attend_df = pd.DataFrame(events_to_attend_list, columns=["Title", "Start Time", "Zoom Link",
                                                                        "HL Link", "Description"])
-    csv_output_file_path = 'All_Events-0948-2022-01-04.csv'
+    csv_output_file_path = 'All_Events-{}.csv'.format(dt.now().strftime("%Y-%m-%d"))
     print(csv_output_file_path)
     events_to_attend_df.to_csv(csv_output_file_path)
 
